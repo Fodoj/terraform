@@ -44,8 +44,24 @@ func expandListeners(configured []interface{}) ([]*elb.Listener, error) {
 			l.SSLCertificateId = aws.String(v.(string))
 		}
 
-		listeners = append(listeners, l)
-	}
+                var valid bool
+                if l.SSLCertificateId != nil && *l.SSLCertificateId != "" {
+                        // validate the protocol is correct
+                        for _, p := range []string{"https", "ssl"} {
+                                if (*l.InstanceProtocol == p) || (*l.Protocol == p) {
+                                        valid = true
+                                }
+                        }
+                } else {
+                        valid = true
+                }
+
+                if valid {
+                        listeners = append(listeners, l)
+                } else {
+                        return nil, fmt.Errorf("[ERR] ELB Listener: ssl_certificate_id may be set only when protocol is 'https' or 'ssl'")
+                }
+        }
 
 	return listeners, nil
 }
@@ -236,6 +252,30 @@ func expandElastiCacheParameters(configured []interface{}) ([]*elasticache.Param
 	}
 
 	return parameters, nil
+}
+
+// Flattens an access log into something that flatmap.Flatten() can handle
+func flattenAccessLog(l *elb.AccessLog) []map[string]interface{} {
+	result := make([]map[string]interface{}, 0, 1)
+
+	if l != nil && *l.Enabled {
+		r := make(map[string]interface{})
+		if l.S3BucketName != nil {
+			r["bucket"] = *l.S3BucketName
+		}
+
+		if l.S3BucketPrefix != nil {
+			r["bucket_prefix"] = *l.S3BucketPrefix
+		}
+
+		if l.EmitInterval != nil {
+			r["interval"] = *l.EmitInterval
+		}
+
+		result = append(result, r)
+	}
+
+	return result
 }
 
 // Flattens a health check into something that flatmap.Flatten()

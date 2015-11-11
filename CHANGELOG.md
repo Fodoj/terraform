@@ -58,6 +58,7 @@ BUG FIXES:
   * `terraform remote config`: update `--help` output [GH-3632]
   * core: modules on Git branches now update properly [GH-1568]
   * core: Fix issue preventing input prompts for unset variables during plan [GH-3843]
+  * core: Orphan resources can now be targets [GH-3912]
   * provider/google: Timeout when deleting large instance_group_manager [GH-3591]
   * provider/aws: Fix issue with order of Termincation Policies in AutoScaling Groups. 
       This will introduce plans on upgrade to this version, in order to correct the ordering [GH-2890]
@@ -72,6 +73,7 @@ BUG FIXES:
   * provider/aws: Fix issue with SNS topic policy if omitted [GH-3777]
   * provider/aws: Support scratch volumes in `aws_ecs_task_definition` [GH-3810]
   * provider/aws: Treat `aws_ecs_service` w/ Status==INACTIVE as deleted [GH-3828]
+  * provider/aws: Expand ~ to homedir in `aws_s3_bucket_object.source` [GH-3910]
   * provider/azure: various bugfixes [GH-3695]
   * provider/digitalocean: fix issue preventing SSH fingerprints from working [GH-3633]
   * provider/digitalocean: Fixing the DigitalOcean Droplet 404 potential on refresh of state [GH-3768]
@@ -84,6 +86,7 @@ BUG FIXES:
   * provider/openstack: Better handling of network resource state changes [GH-3712]
   * provider/openstack: Fix crashing when no security group is specified [GH-3801]
   * provider/packet: Fix issue that could cause errors when provisioning many devices at once [GH-3847]
+  * provider/openstack: Fix issue preventing security group rules from being removed [GH-3796]
 
 ## 0.6.6 (October 23, 2015)
 
